@@ -20,7 +20,9 @@ battnotify &
 # DEPENDENCIES
 
 * [libnotify](https://gitlab.gnome.org/GNOME/libnotify)
-* [pkg-config](https://gitlab.freedesktop.org/pkg-config/pkg-config)
+* ^[pkg-config](https://gitlab.freedesktop.org/pkg-config/pkg-config)
+
+*^: compilation time dependencies.*
 
 # LICENSE
 
