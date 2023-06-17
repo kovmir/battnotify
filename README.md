@@ -14,9 +14,9 @@ sudo make install
 # USAGE
 
 ```bash
-# Within your ~/.xinitrc
-battnotify &
+battnotify # Put 'battnotify &' in your '~/.xinitrc'.
 ```
+
 # DEPENDENCIES
 
 * [libnotify](https://gitlab.gnome.org/GNOME/libnotify)
