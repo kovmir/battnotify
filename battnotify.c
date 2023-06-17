@@ -1,3 +1,6 @@
+/* ISC License
+ * Copyright 2023 Ivan Kovmir */
+
 /* Includes */
 #include <err.h>
 #include <fcntl.h>
