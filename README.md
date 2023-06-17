@@ -4,7 +4,7 @@ Show desktop notifications if your battery is low
 
 # INSTALL
 
-```
+```bash
 git clone https://github.com/kovmir/battnotify.git
 cd battnotify # Optionally adjust config.h to your liking.
 make
@@ -13,7 +13,7 @@ sudo make install
 
 # USAGE
 
-```
+```bash
 # Within your ~/.xinitrc
 battnotify &
 ```
