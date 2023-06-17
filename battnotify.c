@@ -16,9 +16,6 @@
 #define AC_OFF 0
 #define NOTIFY_APP_NAME "battnotify"
 
-/* Global Variables */
-#include "config.h"
-
 /* Function Prototypes */
 /* Returns battery charge percentage [0-100]. */
 static int get_batt_percentage(void);
@@ -26,6 +23,9 @@ static int get_batt_percentage(void);
 static int get_ac_status(void);
 /* Returns an integer read from a given file. */
 static inline int safe_read_num(const char *file_path);
+
+/* Global Variables */
+#include "config.h"
 
 inline int
 safe_read_num(const char *file_path)
