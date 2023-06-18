@@ -2,6 +2,13 @@
 
 Show desktop notifications if your battery is low
 
+# PREVIEW
+
+![screenshot](screenshot.png)
+
+*The look of the notification at your side depends on your notification
+daemon and its configuration.*
+
 # INSTALL
 
 ```bash
