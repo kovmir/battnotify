@@ -1,5 +1,5 @@
-/* ISC License
- * Copyright 2023 Ivan Kovmir */
+/* MIT License
+ * Copyright 2024 Ivan Kovmir */
 
 /* Includes */
 #include <err.h>
