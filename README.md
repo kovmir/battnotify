@@ -1,12 +1,12 @@
 # battnotify
 
-Show desktop notifications if your battery is low
+Display desktop notifications if your battery is low.
 
 # PREVIEW
 
 ![screenshot](screenshot.png)
 
-*The look of the notification at your side depends on your notification
+*The look of the notification on your computer depends on your notification
 daemon and its configuration.*
 
 # INSTALL
@@ -24,14 +24,29 @@ sudo make install
 battnotify # Put 'battnotify &' in your '~/.xinitrc'.
 ```
 
+*A notification daemon, like [dunst][1], must be started prior to `battnotify`.*
+
 # DEPENDENCIES
 
-* [libnotify](https://gitlab.gnome.org/GNOME/libnotify)
-* ^[pkg-config](https://gitlab.freedesktop.org/pkg-config/pkg-config)
+* ^[GNU Make][5]
+* ^[pkg-config][4]
+* ^[GCC][6] or [Clang][7]
+* [libnotify][3]
 
-*^: compilation time dependencies.*
+*^: compilation time only dependencies.*
+
+# SUPPORTED OPERATING SYSTEMS
+
+* Linux
 
 # CONTRIBUTING
 
-When submitting PRs, please maintain the [coding
-style](https://suckless.org/coding_style/) used for the project.
+When submitting PRs, please maintain the [coding style][2] used for the project.
+
+[1]: https://dunst-project.org/
+[2]: https://suckless.org/coding_style/
+[3]: https://gitlab.gnome.org/GNOME/libnotify
+[4]: https://gitlab.freedesktop.org/pkg-config/pkg-config
+[5]: https://www.gnu.org/software/make/
+[6]: https://gcc.gnu.org/
+[7]: https://clang.llvm.org/
