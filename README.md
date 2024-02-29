@@ -38,6 +38,14 @@ battnotify # Put 'battnotify &' in your '~/.xinitrc'.
 # SUPPORTED OPERATING SYSTEMS
 
 * Linux
+* BSD
+
+# FAQ
+
+**Q: Does it support Wayland?**
+
+A: It does, as it is independent of the display server due to [Desktop
+Notifications Specification][8].
 
 # CONTRIBUTING
 
@@ -50,3 +58,4 @@ When submitting PRs, please maintain the [coding style][2] used for the project.
 [5]: https://www.gnu.org/software/make/
 [6]: https://gcc.gnu.org/
 [7]: https://clang.llvm.org/
+[8]: https://specifications.freedesktop.org/notification-spec/notification-spec-latest.html
