@@ -1,12 +1,15 @@
-name: Ubuntu
+name: build
 
-on: [push, pull_request]
+on:
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Install dependencies
       run: sudo apt-get install -y build-essential libnotify-dev
