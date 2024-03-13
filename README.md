@@ -38,7 +38,6 @@ battnotify # Put 'battnotify &' in your '~/.xinitrc'.
 # SUPPORTED OPERATING SYSTEMS
 
 * Linux
-* BSD
 
 # FAQ
 
