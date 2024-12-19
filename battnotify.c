@@ -49,13 +49,13 @@ read_num_file(const char *file_path, int *num)
 int
 get_batt_percentage(int *percent)
 {
-	return read_num_file(BATT_PATH, percent);
+	return read_num_file(batt_path, percent);
 }
 
 int
 is_charging(int *state)
 {
-	return read_num_file(AC_PATH, state);
+	return read_num_file(ac_path, state);
 }
 
 int
@@ -68,18 +68,18 @@ main(void)
 
 	notify_init(NOTIFY_APP_NAME);
 	batt_notifcn = notify_notification_new(NULL, NULL, NULL);
-	notify_notification_set_urgency(batt_notifcn, URGENCY_LEVEL);
+	notify_notification_set_urgency(batt_notifcn, ntfy_urgency_level);
 	notify_notification_set_timeout(batt_notifcn, TIMEOUT);
 
-	for (;; sleep(DELAY)) {
+	for (;; sleep(polling_delay)) {
 		if (get_batt_percentage(&batt_percent)) {
-			fprintf(stderr, "failed to access %s\n", BATT_PATH);
+			fprintf(stderr, "failed to access %s\n", batt_path);
 			return 1;
 		}
-		if (batt_percent < BATT_WARN_PERCENT) {
+		if (batt_percent < batt_warn_percent) {
 			if (is_charging(&ac_status)) {
 				fprintf(stderr,
-					"failed to access %s\n", AC_PATH);
+					"failed to access %s\n", ac_path);
 				return 1;
 			}
 			if (ac_status != AC_STATE_CHARGING) {
