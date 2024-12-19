@@ -17,3 +17,5 @@ static const NotifyUrgency ntfn_urgency_level = NOTIFY_URGENCY_CRITICAL;
  * NOTIFY_EXPIRES_DEFAULT
  * NOTIFY_EXPIRES_NEVER */
 static const gint ntfn_timeout = NOTIFY_EXPIRES_DEFAULT;
+/* Notification title. */
+static const char *ntfn_title = "Low Battery Level";

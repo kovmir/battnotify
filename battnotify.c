@@ -89,8 +89,7 @@ main(void)
 			return 1;
 		}
 		snprintf(buf, BUF_SIZE, "%d%%", batt_percent);
-		notify_notification_update(batt_notifcn,
-			"Low Battery Level", buf, NULL);
+		notify_notification_update(batt_notifcn, ntfn_title, buf, NULL);
 		notify_notification_show(batt_notifcn, NULL);
 	}
 }
