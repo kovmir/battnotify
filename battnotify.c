@@ -17,9 +17,9 @@
 /* Function Prototypes */
 /* Read battery charge percentage [0-100].
  * Return 1 on failure, 0 on success. */
-static int get_batt_percentage(int *percent);
+static inline int get_batt_percentage(int *percent);
 /* Return 1 if the device is charging, 0 otherwise. */
-static int is_charging(int *state);
+static inline int is_charging(int *state);
 /* Read a string from file and parse an integer.
  * Return 1 on failure, 0 on success */
 static inline int read_num_file(const char *file_path, int *num);
@@ -48,13 +48,13 @@ read_num_file(const char *file_path, int *num)
 	return 0;
 }
 
-int
+inline int
 get_batt_percentage(int *percent)
 {
 	return read_num_file(batt_path, percent);
 }
 
-int
+inline int
 is_charging(int *state)
 {
 	return read_num_file(ac_path, state);
