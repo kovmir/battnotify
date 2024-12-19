@@ -2,7 +2,6 @@
  * Copyright 2024 Ivan Kovmir */
 
 /* Includes */
-#include <err.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,47 +12,50 @@
 /* Constants and Macros */
 #define BUF_SIZE 16
 
-#define AC_OFF 0
+#define AC_STATE_CHARGING 1
 #define NOTIFY_APP_NAME "battnotify"
 
 /* Function Prototypes */
-/* Returns battery charge percentage [0-100]. */
-static int get_batt_percentage(void);
+/* Read battery charge percentage [0-100].
+ * Return 1 on failure, 0 on success. */
+static int get_batt_percentage(int *percent);
 /* Return 1 if the device is charging, 0 otherwise. */
-static int is_charging(void);
-/* Returns an integer read from a given file. */
-static inline int safe_read_num(const char *file_path);
+static int is_charging(int *state);
+/* Read a string from file and parse an integer.
+ * Return 1 on failure, 0 on success */
+static inline int read_num_file(const char *file_path, int *num);
 
 /* Global Variables */
 #include "config.h"
 
 inline int
-safe_read_num(const char *file_path)
+read_num_file(const char *file_path, int *num)
 {
 	int fd;
 	ssize_t n_read;
 	char buf[BUF_SIZE];
 	fd = open(file_path, O_RDONLY);
 	if (fd < 0)
-		err(1, "failed to open %s", file_path);
+		return 1;
 	n_read = read(fd, buf, BUF_SIZE);
 	if (n_read < 0)
-		err(1, "failed to read %s", file_path);
-	buf[n_read] = '\0';
+		return 1;
+	buf[n_read] = 0;
+	*num = (int)strtol(buf, NULL, 10);
 	close(fd);
-	return (int)strtol(buf, NULL, 10);
+	return 0;
 }
 
 int
-get_batt_percentage(void)
+get_batt_percentage(int *percent)
 {
-	return safe_read_num(BATT_PATH);
+	return read_num_file(BATT_PATH, percent);
 }
 
 int
-is_charging(void)
+is_charging(int *state)
 {
-	return safe_read_num(AC_PATH);
+	return read_num_file(AC_PATH, state);
 }
 
 int
@@ -70,10 +72,17 @@ main(void)
 	notify_notification_set_timeout(batt_notifcn, TIMEOUT);
 
 	for (;; sleep(DELAY)) {
-		batt_percent = get_batt_percentage();
+		if (get_batt_percentage(&batt_percent)) {
+			fprintf(stderr, "failed to access %s\n", BATT_PATH);
+			return 1;
+		}
 		if (batt_percent < BATT_WARN_PERCENT) {
-			ac_status = is_charging();
-			if (ac_status == AC_OFF) {
+			if (is_charging(&ac_status)) {
+				fprintf(stderr,
+					"failed to access %s\n", AC_PATH);
+				return 1;
+			}
+			if (ac_status != AC_STATE_CHARGING) {
 				snprintf(buf, BUF_SIZE, "%d%%", batt_percent);
 				notify_notification_update(batt_notifcn,
 					"Low Battery Level", buf, NULL);
