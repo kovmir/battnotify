@@ -19,8 +19,8 @@
 /* Function Prototypes */
 /* Returns battery charge percentage [0-100]. */
 static int get_batt_percentage(void);
-/* Returns AC/DC plug state. 1 if plugged in, and 0 otherwise. */
-static int get_ac_status(void);
+/* Return 1 if the device is charging, 0 otherwise. */
+static int is_charging(void);
 /* Returns an integer read from a given file. */
 static inline int safe_read_num(const char *file_path);
 
@@ -51,7 +51,7 @@ get_batt_percentage(void)
 }
 
 int
-get_ac_status(void)
+is_charging(void)
 {
 	return safe_read_num(AC_PATH);
 }
@@ -72,7 +72,7 @@ main(void)
 	for (;; sleep(DELAY)) {
 		batt_percent = get_batt_percentage();
 		if (batt_percent < BATT_WARN_PERCENT) {
-			ac_status = get_ac_status();
+			ac_status = is_charging();
 			if (ac_status == AC_OFF) {
 				snprintf(buf, BUF_SIZE, "%d%%", batt_percent);
 				notify_notification_update(batt_notifcn,
