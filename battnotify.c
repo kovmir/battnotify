@@ -72,22 +72,25 @@ main(void)
 	notify_notification_set_timeout(batt_notifcn, TIMEOUT);
 
 	for (;; sleep(polling_delay)) {
+		if (is_charging(&ac_status)) {
+			fprintf(stderr,
+				"failed to access %s\n", ac_path);
+			return 1;
+		}
+
+		if (ac_status == AC_STATE_CHARGING)
+			continue;
+		if (batt_percent > batt_warn_percent) {
+			continue;
+		}
+
 		if (get_batt_percentage(&batt_percent)) {
 			fprintf(stderr, "failed to access %s\n", batt_path);
 			return 1;
 		}
-		if (batt_percent < batt_warn_percent) {
-			if (is_charging(&ac_status)) {
-				fprintf(stderr,
-					"failed to access %s\n", ac_path);
-				return 1;
-			}
-			if (ac_status != AC_STATE_CHARGING) {
-				snprintf(buf, BUF_SIZE, "%d%%", batt_percent);
-				notify_notification_update(batt_notifcn,
-					"Low Battery Level", buf, NULL);
-				notify_notification_show(batt_notifcn, NULL);
-			}
-		}
+		snprintf(buf, BUF_SIZE, "%d%%", batt_percent);
+		notify_notification_update(batt_notifcn,
+			"Low Battery Level", buf, NULL);
+		notify_notification_show(batt_notifcn, NULL);
 	}
 }
