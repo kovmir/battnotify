@@ -28,12 +28,10 @@ battnotify # Put 'battnotify &' in your '~/.xinitrc'.
 
 # DEPENDENCIES
 
-* ^[GNU Make][5]
-* ^[pkg-config][4]
-* ^[GCC][6] or [Clang][7]
+* [GNU Make][5]
+* [pkg-config][4]
+* [GCC][6] or [Clang][7]
 * [libnotify][3]
-
-*^: compilation time only dependencies.*
 
 # SUPPORTED OPERATING SYSTEMS
 
