@@ -1,5 +1,7 @@
 # battnotify
 
+[![battnotify status](https://builds.sr.ht/~kovmir/battnotify.svg)](https://builds.sr.ht/~kovmir/battnotify?)
+
 Display desktop notifications if your battery is low.
 
 # PREVIEW

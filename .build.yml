@@ -1,0 +1,6 @@
+image: alpine/edge
+packages:
+  - build-base
+  - libnotify-dev
+tasks:
+  - build: make -C battnotify
