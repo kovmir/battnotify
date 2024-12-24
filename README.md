@@ -1,3 +1,7 @@
+# REPOSITORY MIGRATION NOTICE
+
+Migrated to [SourceHut](https://git.sr.ht/~kovmir/battnotify).
+
 # battnotify
 
 [![builds.sr.ht status](https://builds.sr.ht/~kovmir/battnotify/commits/master/.build.yml.svg)](https://builds.sr.ht/~kovmir/battnotify/commits/master/.build.yml?)
