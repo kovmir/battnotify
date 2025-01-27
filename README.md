@@ -57,4 +57,4 @@ When submitting PRs, please maintain the [coding style][2] used for the project.
 [5]: https://www.gnu.org/software/make/
 [6]: https://gcc.gnu.org/
 [7]: https://clang.llvm.org/
-[8]: https://specifications.freedesktop.org/notification-spec/notification-spec-latest.html
+[8]: https://specifications.freedesktop.org/notification-spec/latest/
