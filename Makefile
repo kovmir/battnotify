@@ -42,12 +42,12 @@ clean:
 	rm -f ./${PROJECT}
 
 install:
-	mkdir -p ${DESTDIR}${PREFIX}/bin
-	${INSTALL} ./${PROJECT} ${DESTDIR}${PREFIX}/bin/${PROJECT}
+	mkdir -p "${DESTDIR}${PREFIX}/bin"
+	${INSTALL} ./${PROJECT} "${DESTDIR}${PREFIX}/bin/${PROJECT}"
 
 uninstall:
-	rm -f ${DESTDIR}${PREFIX}/bin/${PROJECT}
-	rmdir --ignore-fail-on-non-empty ${DESTDIR}${PREFIX}/bin
+	rm -f "${DESTDIR}${PREFIX}/bin/${PROJECT}"
+	rmdir --ignore-fail-on-non-empty "${DESTDIR}${PREFIX}/bin"
 
 strip:
 	strip ./${PROJECT}
