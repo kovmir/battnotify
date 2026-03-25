@@ -1,6 +1,3 @@
-/* MIT License
- * Copyright 2024 Ivan Kovmir */
-
 /* Includes */
 #include <fcntl.h>
 #include <stdio.h>
