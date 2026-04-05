@@ -1,3 +1,6 @@
+/* SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 Ivan Kovmir */
+
 /* Includes */
 #include <fcntl.h>
 #include <stdio.h>
