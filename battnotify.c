@@ -98,7 +98,7 @@ main(void)
 
 	NotifyNotification *batt_ntfn; /* Notification handle. */
 
-	/* Notification setup code. */
+	/* Notification init code. */
 	notify_init(NTFN_APP_NAME);
 	batt_ntfn = notify_notification_new(NULL, NULL, NULL);
 	notify_notification_set_urgency(batt_ntfn, ntfn_urgency_level);
@@ -110,17 +110,17 @@ main(void)
 			errx(1, "unable to get charging status");
 
 		if (charging == true)
-			continue;
+			continue; /* Charging? Nevermind. */
 
 		ok = get_charge(&batt_charge);
 		if (ok == false)
 			errx(1, "unable to get battery charge");
 
 		if (batt_charge > batt_warn_percent)
-			continue;
+			continue; /* Not charging, and not need for it. */
 
+		/* Not charging and the battery is low. */
 		snprintf(msg, MESSAGE_LEN, "%d%%", batt_charge);
-
 		notify_notification_update(batt_ntfn, ntfn_title, msg, NULL);
 		notify_notification_show(batt_ntfn, NULL);
 	}
