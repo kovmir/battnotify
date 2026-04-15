@@ -15,6 +15,7 @@ CFLAGS += -pedantic
 CFLAGS += -Wall
 CFLAGS += -Wextra
 CFLAGS += -Wstrict-prototypes
+CFLAGS += -DGIT_DESC=\"$(shell git describe --tags --always --dirty)\"
 CFLAGS += $(INCS)
 
 LDFLAGS += $(LIBS)

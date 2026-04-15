@@ -93,12 +93,18 @@ is_charging(bool *ac_state)
 }
 
 int
-main(void)
+main(int argc, char *argv[])
 {
 	char msg[MESSAGE_LEN]; /* String to be sent to notification. */
 	int  batt_charge;
 	bool charging;
 	bool ok;
+
+	(void)argv; /* Suppress unused parameter warning. */
+	if (argc > 1) {
+		puts(GIT_DESC); /* Print version. */
+		return 0;
+	}
 
 	NotifyNotification *batt_ntfn; /* Notification handle. */
 
