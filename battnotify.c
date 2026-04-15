@@ -37,11 +37,17 @@ read_num_file(const char *file_path, int *num)
 	char *endp;
 
 	/* Read the first line from the file. */
+	errno = 0;
 	file = fopen(file_path, "r");
-	if (file == NULL)
+	if (file == NULL) {
+		warn("unable to open %s", file_path);
 		return false;
-	if (fgets(buf, BUF_SIZE, file) == NULL)
+	}
+	if (fgets(buf, BUF_SIZE, file) == NULL) {
+		warnx("unable to read from %s", file_path);
+		fclose(file);
 		return false;
+	}
 	fclose(file);
 
 	/* Parse integer from the line. */
