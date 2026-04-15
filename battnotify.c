@@ -2,7 +2,10 @@
  * Copyright (c) 2026 Ivan Kovmir */
 
 /* Includes */
+#include <err.h>
+#include <errno.h>
 #include <fcntl.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -10,62 +13,76 @@
 #include <libnotify/notify.h>
 
 /* Constants and Macros */
-#define BUF_SIZE 16
+#define MESSAGE_LEN 16
 #define AC_STATE_CHARGING 1
 #define NTFN_APP_NAME "battnotify"
 
 /* Function Prototypes */
-/* Read battery charge percentage [0-100].
- * Return 1 on failure, 0 on success. */
-static inline int get_batt_percentage(int *percent);
-/* Return 1 if the device is charging, 0 otherwise. */
-static inline int is_charging(int *state);
-/* Read a string from file and parse an integer.
- * Return 1 on failure, 0 on success */
-static inline int read_num_file(const char *file_path, int *num);
+/* Get current battery capacity percentage; return true on success. */
+static inline bool get_charge(int *percent);
+/* Get AC power plug state; return true on success. */
+static bool is_charging(bool *state);
+/* Parse an integer from the first line of the file; return true on success. */
+static bool read_num_file(const char *file_path, int *num);
 
 /* Global Variables */
 #include "config.h"
 
-inline int
+bool
 read_num_file(const char *file_path, int *num)
 {
-	int fd;
-	ssize_t n_read;
-	char buf[BUF_SIZE];
+	FILE *file;
+	const int BUF_SIZE = 16;
+	char  buf[BUF_SIZE];
+	char *endp;
 
-	fd = open(file_path, O_RDONLY);
-	if (fd < 0)
-		return 1;
+	/* Read the first line from the file. */
+	file = fopen(file_path, "r");
+	if (file == NULL)
+		return false;
+	if (fgets(buf, BUF_SIZE, file) == NULL)
+		return false;
+	fclose(file);
 
-	n_read = read(fd, buf, BUF_SIZE);
-	if (n_read < 0)
-		return 1;
-	buf[n_read] = 0;
-
-	*num = (int)strtol(buf, NULL, 10);
-	close(fd);
-	return 0;
+	/* Parse integer from the line. */
+	errno = 0;
+	*num = (int)strtol(buf, &endp, 10);
+	if (errno != 0) {
+		warn("unable to parse integer from %s", file_path);
+		return false;
+	}
+	if (buf == endp) {
+		warnx("no integer found in %s", file_path);
+		return false;
+	}
+	return true;
 }
 
-inline int
-get_batt_percentage(int *percent)
+inline bool
+get_charge(int *batt_charge)
 {
-	return read_num_file(batt_path, percent);
+	return read_num_file(batt_path, batt_charge);
 }
 
-inline int
-is_charging(int *state)
+bool
+is_charging(bool *ac_state)
 {
-	return read_num_file(ac_path, state);
+	int i;
+	bool ok;
+
+	ok = read_num_file(ac_path, &i);
+	*ac_state = i == AC_STATE_CHARGING ? true : false;
+	return ok;
 }
 
 int
 main(void)
 {
-	int batt_percent;   /* Battery charge level in percent. */
-	int ac_status;      /* Power cord presence. */
-	char buf[BUF_SIZE]; /* String to be sent to notification. */
+	char msg[MESSAGE_LEN]; /* String to be sent to notification. */
+	int  batt_charge;
+	bool charging;
+	bool ok;
+
 	NotifyNotification *batt_ntfn; /* Notification handle. */
 
 	/* Notification setup code. */
@@ -75,25 +92,23 @@ main(void)
 	notify_notification_set_timeout(batt_ntfn, ntfn_timeout);
 
 	for (;; sleep(polling_delay)) {
-		if (is_charging(&ac_status)) {
-			fprintf(stderr,
-				"failed to access %s\n", ac_path);
-			return 1;
-		}
-		if (ac_status == AC_STATE_CHARGING)
+		ok = is_charging(&charging);
+		if (ok == false)
+			errx(1, "unable to get charging status");
+
+		if (charging == true)
 			continue;
 
-		if (get_batt_percentage(&batt_percent)) {
-			fprintf(stderr, "failed to access %s\n", batt_path);
-			return 1;
-		}
-		if (batt_percent > batt_warn_percent) {
+		ok = get_charge(&batt_charge);
+		if (ok == false)
+			errx(1, "unable to get battery charge");
+
+		if (batt_charge > batt_warn_percent)
 			continue;
-		}
 
-		snprintf(buf, BUF_SIZE, "%d%%", batt_percent);
+		snprintf(msg, MESSAGE_LEN, "%d%%", batt_charge);
 
-		notify_notification_update(batt_ntfn, ntfn_title, buf, NULL);
+		notify_notification_update(batt_ntfn, ntfn_title, msg, NULL);
 		notify_notification_show(batt_ntfn, NULL);
 	}
 }
