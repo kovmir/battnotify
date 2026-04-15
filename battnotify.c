@@ -92,7 +92,7 @@ is_charging(bool *ac_state)
 	return ok;
 }
 
-[[noreturn]] int
+int
 main(int argc, char *argv[])
 {
 	char msg[MESSAGE_LEN]; /* String to be sent to notification. */
