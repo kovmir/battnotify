@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Unit tests for battnotify.
+# Usage: ./test.sh /path/to/batt /path/to/ac
 
 echo 14 > "$1"
 echo 0  > "$2"
