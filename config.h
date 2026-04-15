@@ -1,7 +1,10 @@
+#ifndef DEBUG_PATHS
 /* Battery to read state from. */
 static const char *batt_path = "/sys/class/power_supply/BAT0/capacity";
 /* AC/DC adapter to read state from. */
 static const char *ac_path = "/sys/class/power_supply/AC/online";
+#endif /* DEBUG_PATHS */
+
 /* Battery/AC polling rate in seconds. */
 static const int polling_delay = 10;
 /* Send a notification when battery level is below this. */

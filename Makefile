@@ -23,13 +23,18 @@ build:
 	$(CC) ./$(PROJECT).c $(CFLAGS) -O2 $(LDFLAGS) -o ./$(PROJECT)
 
 debug:
-	$(CC) ./$(PROJECT).c $(CFLAGS) -O0 -g $(LDFLAGS) -o ./$(PROJECT)
+	$(CC) ./$(PROJECT).c $(CFLAGS) -O0 -g -DDEBUG_PATHS $(LDFLAGS) -o ./$(PROJECT)
+
+# Fake battery files for debug.
+batt:
+	echo 16 > ./batt_capacity
+	echo 0  > ./ac_plug
 
 gdb: debug
 	gdb ./$(PROJECT)
 
 clean:
-	rm -f ./$(PROJECT)
+	rm -f ./$(PROJECT) ./batt_capacity ./ac_plug
 
 install:
 	mkdir -p "$(DESTDIR)$(PREFIX)/bin"
