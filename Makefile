@@ -19,22 +19,32 @@ CFLAGS += $(INCS)
 
 LDFLAGS += $(LIBS)
 
+# Fake battery and AC power plug files for debug.
+BATT_CAP = ./batt_capacity
+AC_PLUG  = ./ac_plug
+
 build:
 	$(CC) ./$(PROJECT).c $(CFLAGS) -O2 $(LDFLAGS) -o ./$(PROJECT)
 
 debug:
-	$(CC) ./$(PROJECT).c $(CFLAGS) -O0 -g -DDEBUG_PATHS $(LDFLAGS) -o ./$(PROJECT)
+	$(CC) \
+		./$(PROJECT).c \
+		$(CFLAGS) -O0 -g \
+		-DDEBUG_PATHS \
+		-DDEBUG_BATT_PATH=\"$(BATT_CAP)\" \
+		-DDEBUG_AC_PATH=\"$(AC_PLUG)\" \
+		$(LDFLAGS) \
+		-o ./$(PROJECT)
 
-# Fake battery files for debug.
 batt:
-	echo 16 > ./batt_capacity
-	echo 0  > ./ac_plug
+	echo 14 > $(BATT_CAP)
+	echo 0  > $(AC_PLUG)
 
 gdb: debug
 	gdb ./$(PROJECT)
 
 clean:
-	rm -f ./$(PROJECT) ./batt_capacity ./ac_plug
+	rm -f ./$(PROJECT) $(BATT_CAP) $(AC_PLUG)
 
 install:
 	mkdir -p "$(DESTDIR)$(PREFIX)/bin"

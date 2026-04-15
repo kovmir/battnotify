@@ -34,9 +34,9 @@ static bool read_num_file(const char *file_path, int *num);
 
 #ifdef DEBUG_PATHS
 /* Battery to read state from. */
-static const char *batt_path = "./batt_capacity";
+static const char *batt_path = DEBUG_BATT_PATH;
 /* AC/DC adapter to read state from. */
-static const char *ac_path = "./ac_plug";
+static const char *ac_path = DEBUG_AC_PATH;
 #endif /* DEBUG_PATHS */
 
 bool
