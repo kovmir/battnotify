@@ -4,3 +4,4 @@ packages:
   - libnotify-dev
 tasks:
   - build: CFLAGS='-Werror' make -C battnotify
+  - test:  CFLAGS='-Werror' make -C battnotify test
