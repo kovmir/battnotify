@@ -12,6 +12,10 @@
 
 #include <libnotify/notify.h>
 
+#ifndef __linux__
+    #error "Only Linux is supported."
+#endif
+
 /* Constants and Macros */
 #define MESSAGE_LEN 16
 #define AC_STATE_CHARGING 1
