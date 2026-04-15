@@ -31,15 +31,14 @@ debug:
 	$(CC) \
 		./$(PROJECT).c \
 		$(CFLAGS) -O0 -g \
-		-DDEBUG_PATHS \
+		-DDEBUG \
 		-DDEBUG_BATT_PATH=\"$(BATT_CAP)\" \
 		-DDEBUG_AC_PATH=\"$(AC_PLUG)\" \
 		$(LDFLAGS) \
 		-o ./$(PROJECT)
 
-batt:
-	echo 14 > $(BATT_CAP)
-	echo 0  > $(AC_PLUG)
+test: debug
+	./test.sh $(BATT_CAP) $(AC_PLUG)
 
 gdb: debug
 	gdb ./$(PROJECT)
@@ -58,4 +57,4 @@ uninstall:
 strip:
 	strip ./$(PROJECT)
 
-.PHONY: build debug gdb clean install uninstall
+.PHONY: build debug test gdb clean install uninstall

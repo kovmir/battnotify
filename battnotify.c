@@ -32,12 +32,12 @@ static bool read_num_file(const char *file_path, int *num);
 /* Global Variables */
 #include "config.h"
 
-#ifdef DEBUG_PATHS
+#ifdef DEBUG
 /* Battery to read state from. */
 static const char *batt_path = DEBUG_BATT_PATH;
 /* AC/DC adapter to read state from. */
 static const char *ac_path = DEBUG_AC_PATH;
-#endif /* DEBUG_PATHS */
+#endif /* DEBUG */
 
 bool
 read_num_file(const char *file_path, int *num)
@@ -100,7 +100,7 @@ main(int argc, char *argv[])
 	bool charging;
 	bool ok;
 
-	(void)argv; /* Suppress unused parameter warning. */
+	(void)argv; /* Suppress -Wunused-parameter. */
 	if (argc > 1) {
 		puts(GIT_DESC); /* Print version. */
 		return 0;
@@ -119,19 +119,35 @@ main(int argc, char *argv[])
 		if (ok == false)
 			errx(1, "unable to get charging status");
 
-		if (charging == true)
+		if (charging == true) {
+#ifdef DEBUG
+			exit(0);
+#else
 			continue; /* Charging? Nevermind. */
+#endif
+		}
 
 		ok = get_charge(&batt_charge);
 		if (ok == false)
 			errx(1, "unable to get battery charge");
 
-		if (batt_charge > batt_warn_percent)
-			continue; /* Not charging, and not need for it. */
+		if (batt_charge > batt_warn_percent) {
+#ifdef DEBUG
+			exit(0);
+#else
+			continue; /* Not charging, and no need for it. */
+#endif
+		}
 
 		/* Not charging and the battery is low. */
 		snprintf(msg, MESSAGE_LEN, "%d%%", batt_charge);
+#ifdef DEBUG
+		(void)ntfn_title; /* Suppres -Wunused-variable. */
+		puts(msg);
+		exit(0);
+#else
 		notify_notification_update(batt_ntfn, ntfn_title, msg, NULL);
 		notify_notification_show(batt_ntfn, NULL);
+#endif
 	}
 }
