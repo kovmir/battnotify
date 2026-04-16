@@ -28,6 +28,8 @@ build: CFLAGS += -DBUILD_TYPE=\"release\"
 build:
 	$(CC) ./$(PROJECT).c $(CFLAGS) -O2 $(LDFLAGS) -o ./$(PROJECT)
 
+# No need for libnotify.
+debug: LIBS :=
 debug: CFLAGS += -DBUILD_TYPE=\"debug\"
 debug:
 	$(CC) \

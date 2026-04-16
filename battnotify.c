@@ -10,7 +10,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#ifndef DEBUG
 #include <libnotify/notify.h>
+#endif
 
 #ifndef __linux__
     #error "Only Linux is supported."
@@ -106,6 +108,7 @@ main(int argc, char *argv[])
 		return 0;
 	}
 
+#ifndef DEBUG
 	NotifyNotification *batt_ntfn; /* Notification handle. */
 
 	/* Notification init code. */
@@ -113,6 +116,7 @@ main(int argc, char *argv[])
 	batt_ntfn = notify_notification_new(NULL, NULL, NULL);
 	notify_notification_set_urgency(batt_ntfn, ntfn_urgency_level);
 	notify_notification_set_timeout(batt_ntfn, ntfn_timeout);
+#endif
 
 	for (;; sleep(polling_delay)) {
 		ok = is_charging(&charging);
@@ -142,7 +146,6 @@ main(int argc, char *argv[])
 		/* Not charging and the battery is low. */
 		snprintf(msg, MESSAGE_LEN, "%d%%", batt_charge);
 #ifdef DEBUG
-		(void)ntfn_title; /* Suppres -Wunused-variable. */
 		puts(msg);
 		exit(0);
 #else
