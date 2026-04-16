@@ -15,8 +15,8 @@ daemon and its configuration.*
 
 ```bash
 git clone https://git.sr.ht/~kovmir/battnotify
-cd battnotify # Optionally adjust config.h to your liking.
-make
+cd battnotify
+make # Optionally adjust config.h to your liking.
 sudo make install
 ```
 

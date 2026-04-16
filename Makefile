@@ -26,7 +26,7 @@ AC_PLUG  = ./ac_plug
 
 build: CFLAGS += -DBUILD_TYPE=\"release\"
 build:
-	$(CC) ./$(PROJECT).c $(CFLAGS) -O2 $(LDFLAGS) -o ./$(PROJECT)
+	$(CC) ./$(PROJECT).c -O2 $(CFLAGS) $(LDFLAGS) -o ./$(PROJECT)
 
 # No need for libnotify.
 debug: LIBS :=
@@ -34,13 +34,14 @@ debug: CFLAGS += -DBUILD_TYPE=\"debug\"
 debug:
 	$(CC) \
 		./$(PROJECT).c \
-		$(CFLAGS) -O0 -g \
+		-O0 -g $(CFLAGS) \
 		-DDEBUG \
 		-DDEBUG_BATT_PATH=\"$(BATT_CAP)\" \
 		-DDEBUG_AC_PATH=\"$(AC_PLUG)\" \
 		$(LDFLAGS) \
 		-o ./$(PROJECT)
 
+# Run unit tests.
 test: debug
 	./test.sh $(BATT_CAP) $(AC_PLUG)
 

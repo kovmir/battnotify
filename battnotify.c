@@ -14,14 +14,16 @@
 #include <libnotify/notify.h>
 #endif
 
-#ifndef __linux__
-    #error "Only Linux is supported."
-#endif
-
 /* Constants and Macros */
 #define MESSAGE_LEN 16
 #define AC_STATE_CHARGING 1
 #define NTFN_APP_NAME "battnotify"
+
+#ifndef DEBUG
+#ifndef __linux__
+    #error "Unsupported operating system."
+#endif /* __linux__ */
+#endif /* DEBUG */
 
 /* Function Prototypes */
 /* Get current battery capacity percentage; return true on success. */
@@ -116,7 +118,7 @@ main(int argc, char *argv[])
 	batt_ntfn = notify_notification_new(NULL, NULL, NULL);
 	notify_notification_set_urgency(batt_ntfn, ntfn_urgency_level);
 	notify_notification_set_timeout(batt_ntfn, ntfn_timeout);
-#endif
+#endif /* DEBUG */
 
 	for (;; sleep(polling_delay)) {
 		ok = is_charging(&charging);
@@ -128,7 +130,7 @@ main(int argc, char *argv[])
 			exit(0);
 #else
 			continue; /* Charging? Nevermind. */
-#endif
+#endif /* DEBUG */
 		}
 
 		ok = get_charge(&batt_charge);
@@ -140,7 +142,7 @@ main(int argc, char *argv[])
 			exit(0);
 #else
 			continue; /* Not charging, and no need for it. */
-#endif
+#endif /* DEBUG */
 		}
 
 		/* Not charging and the battery is low. */
@@ -151,6 +153,6 @@ main(int argc, char *argv[])
 #else
 		notify_notification_update(batt_ntfn, ntfn_title, msg, NULL);
 		notify_notification_show(batt_ntfn, NULL);
-#endif
+#endif /* DEBUG */
 	}
 }
