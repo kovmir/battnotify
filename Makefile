@@ -20,9 +20,11 @@ CFLAGS += $(INCS)
 
 LDFLAGS += $(LIBS)
 
-# Fake battery and AC power plug files for debug.
-BATT_CAP = ./batt_capacity
-AC_PLUG  = ./ac_plug
+# Config values for debug build.
+BATT_PATH     = ./batt_capacity
+AC_PATH       = ./ac_plug
+POLLING_DELAY = 10
+WARN_PERCENT  = 15
 
 build: CFLAGS += -DBUILD_TYPE=\"release\"
 build:
@@ -36,14 +38,16 @@ debug:
 		./$(PROJECT).c \
 		-O0 -g $(CFLAGS) \
 		-DDEBUG \
-		-DDEBUG_BATT_PATH=\"$(BATT_CAP)\" \
-		-DDEBUG_AC_PATH=\"$(AC_PLUG)\" \
+		-DDEBUG_BATT_PATH=\"$(BATT_PATH)\" \
+		-DDEBUG_AC_PATH=\"$(AC_PATH)\" \
+		-DDEBUG_POLLING_DELAY=$(POLLING_DELAY) \
+		-DDEBUG_WARN_PERCENT=$(WARN_PERCENT) \
 		$(LDFLAGS) \
 		-o ./$(PROJECT)
 
 # Run unit tests.
 test: debug
-	./test.sh $(BATT_CAP) $(AC_PLUG)
+	./test.sh $(BATT_PATH) $(AC_PATH)
 
 gdb: debug
 	gdb ./$(PROJECT)

@@ -34,13 +34,13 @@ static bool is_charging(bool *state);
 static bool read_num_file(const char *file_path, int *num);
 
 /* Global Variables */
+#ifndef DEBUG
 #include "config.h"
-
-#ifdef DEBUG
-/* Battery to read state from. */
+#else
 static const char *batt_path = DEBUG_BATT_PATH;
-/* AC/DC adapter to read state from. */
 static const char *ac_path = DEBUG_AC_PATH;
+static const int polling_delay = DEBUG_POLLING_DELAY;
+static const int batt_warn_percent = DEBUG_WARN_PERCENT;
 #endif /* DEBUG */
 
 bool
