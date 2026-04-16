@@ -41,3 +41,5 @@ else
 	echo '4 NOT OK'
 	exit 1
 fi
+
+rm -rf "$1" "$2"
