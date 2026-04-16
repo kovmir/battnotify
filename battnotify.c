@@ -102,7 +102,7 @@ main(int argc, char *argv[])
 
 	(void)argv; /* Suppress -Wunused-parameter. */
 	if (argc > 1) {
-		puts(GIT_DESC); /* Print version. */
+		puts(GIT_DESC" "BUILD_TYPE); /* Print version. */
 		return 0;
 	}
 

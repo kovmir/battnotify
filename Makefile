@@ -24,9 +24,11 @@ LDFLAGS += $(LIBS)
 BATT_CAP = ./batt_capacity
 AC_PLUG  = ./ac_plug
 
+build: CFLAGS += -DBUILD_TYPE=\"release\"
 build:
 	$(CC) ./$(PROJECT).c $(CFLAGS) -O2 $(LDFLAGS) -o ./$(PROJECT)
 
+debug: CFLAGS += -DBUILD_TYPE=\"debug\"
 debug:
 	$(CC) \
 		./$(PROJECT).c \
