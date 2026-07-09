@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+/* Code under DEBUGs is for unit testing. */
 #ifndef DEBUG
 #include <libnotify/notify.h>
 #endif
