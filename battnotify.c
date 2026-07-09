@@ -21,7 +21,7 @@
 
 #ifndef DEBUG
 #ifndef __linux__
-    #error "Unsupported operating system."
+#error "Unsupported operating system."
 #endif /* __linux__ */
 #endif /* DEBUG */
 
