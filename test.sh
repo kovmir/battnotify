@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # Unit tests for battnotify.
 # Usage: ./test.sh /path/to/batt /path/to/ac
+if [[ "$#" == 0 ]]; then
+	echo 'Run `make test`; do not invoke this script directly.'
+	exit 1
+fi
 
 echo 14 > "$1"
 echo 0  > "$2"
