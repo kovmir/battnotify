@@ -2,6 +2,7 @@
  * Copyright (c) 2026 Ivan Kovmir */
 
 /* Includes */
+#include <assert.h>
 #include <err.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -51,6 +52,9 @@ read_num_file(const char *file_path, int *num)
 	char  buf[BUF_SIZE];
 	char *endp;
 
+	assert(file_path != NULL);
+	assert(num != NULL);
+
 	/* Read the first line from the file. */
 	errno = 0;
 	file = fopen(file_path, "r");
@@ -82,6 +86,7 @@ read_num_file(const char *file_path, int *num)
 inline bool
 get_charge(int *batt_charge)
 {
+	assert(batt_charge != NULL);
 	return read_num_file(batt_path, batt_charge);
 }
 
@@ -90,6 +95,8 @@ is_charging(bool *ac_state)
 {
 	int i;
 	bool ok;
+
+	assert(ac_state != NULL);
 
 	ok = read_num_file(ac_path, &i);
 	*ac_state = i == AC_STATE_CHARGING ? true : false;
@@ -120,6 +127,7 @@ main(int argc, char *argv[])
 	notify_notification_set_timeout(batt_ntfn, ntfn_timeout);
 #endif /* DEBUG */
 
+	assert(polling_delay > 0);
 	for (;; sleep(polling_delay)) {
 		ok = is_charging(&charging);
 		if (ok == false)
