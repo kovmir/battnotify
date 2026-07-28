@@ -114,15 +114,6 @@ main(int argc, char *argv[])
 #ifndef DEBUG
 	/* Has the notification already been sent? */
 	bool notified = false;
-#endif /* DEBUG */
-
-	(void)argv; /* Suppress -Wunused-parameter. */
-	if (argc > 1) {
-		puts(GIT_DESC" "BUILD_TYPE); /* Print version. */
-		return 0;
-	}
-
-#ifndef DEBUG
 	NotifyNotification *batt_ntfn; /* Notification handle. */
 
 	/* Notification init code. */
@@ -131,6 +122,12 @@ main(int argc, char *argv[])
 	notify_notification_set_urgency(batt_ntfn, ntfn_urgency_level);
 	notify_notification_set_timeout(batt_ntfn, ntfn_timeout);
 #endif /* DEBUG */
+
+	(void)argv; /* Suppress -Wunused-parameter. */
+	if (argc > 1) {
+		puts(GIT_DESC" "BUILD_TYPE); /* Print version. */
+		return 0;
+	}
 
 	assert(polling_delay > 0);
 	for (;; sleep(polling_delay)) {
