@@ -132,8 +132,10 @@ main(int argc, char *argv[])
 	assert(polling_delay > 0);
 	for (;; sleep(polling_delay)) {
 		ok = is_charging(&charging);
-		if (ok == false)
-			errx(1, "unable to get charging status");
+		if (ok == false) {
+			warnx("unable to get charging status");
+			continue;
+		}
 
 		if (charging == true) {
 #ifdef DEBUG
@@ -145,8 +147,10 @@ main(int argc, char *argv[])
 		}
 
 		ok = get_charge(&batt_charge);
-		if (ok == false)
-			errx(1, "unable to get battery charge");
+		if (ok == false) {
+			warnx("unable to get battery charge");
+			continue;
+		}
 
 		if (batt_charge > batt_warn_percent) {
 #ifdef DEBUG
