@@ -111,6 +111,10 @@ main(int argc, char *argv[])
 	int  batt_charge;
 	bool charging;
 	bool ok;
+#ifndef DEBUG
+	/* Has the notification already been sent? */
+	bool notified = false;
+#endif /* DEBUG */
 
 	(void)argv; /* Suppress -Wunused-parameter. */
 	if (argc > 1) {
@@ -138,6 +142,7 @@ main(int argc, char *argv[])
 #ifdef DEBUG
 			exit(0);
 #else
+			notified = false;
 			continue; /* Charging? Nevermind. */
 #endif /* DEBUG */
 		}
@@ -160,8 +165,11 @@ main(int argc, char *argv[])
 		puts(msg);
 		exit(0);
 #else
+		if (notified == true)
+			continue;
 		notify_notification_update(batt_ntfn, ntfn_title, msg, NULL);
 		notify_notification_show(batt_ntfn, NULL);
+		notified = true;
 #endif /* DEBUG */
 	}
 }
