@@ -1,3 +1,5 @@
+/* RECOMPILE THE PROGRAM IF YOU EDIT THIS FILE. */
+
 /* Battery to read state from. */
 static const char *batt_path = "/sys/class/power_supply/BAT0/capacity";
 /* AC/DC adapter to read state from. */
