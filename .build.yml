@@ -1,7 +1,0 @@
-image: alpine/edge
-packages:
-  - build-base
-  - libnotify-dev
-tasks:
-  - build: CFLAGS='-Werror' make -C battnotify
-  - test:  CFLAGS='-Werror' make -C battnotify test

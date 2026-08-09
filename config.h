@@ -10,6 +10,7 @@ static const int polling_delay = 10;
 /* Send a notification when battery level is below this. */
 static const int batt_warn_percent = 15;
 
+static const char *ntfn_app_name = "battnotify";
 /* Set notification urgency level.
  * NOTIFY_URGENCY_LOW
  * NOTIFY_URGENCY_NORMAL

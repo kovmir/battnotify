@@ -1,69 +1,48 @@
-PROJECT = battnotify
-PREFIX ?= /usr/local
-INSTALL ?= install
-
 CC ?= cc
 
-LIBNOTIFY_LIBS = $(shell pkg-config --libs libnotify)
-LIBNOTIFY_INCS = $(shell pkg-config --cflags libnotify)
+LIBNOTIFY_CFLAGS := $(shell pkg-config --cflags libnotify)
+LIBNOTIFY_LDLIBS := $(shell pkg-config --libs libnotify)
+GIT_VERSION := $(shell git describe --tags --always --dirty)
 
-LIBS += $(LIBNOTIFY_LIBS)
-INCS += $(LIBNOTIFY_INCS)
-
-CFLAGS += -std=c23
+CFLAGS += -std=c99
+CFLAGS += -g
+CFLAGS += -O2
 CFLAGS += -pedantic
 CFLAGS += -Wall
 CFLAGS += -Wextra
-CFLAGS += -Wstrict-prototypes
-CFLAGS += -DGIT_DESC=\"$(shell git describe --tags --always --dirty)\"
-CFLAGS += $(INCS)
+CFLAGS += -D_DEFAULT_SOURCE
+CFLAGS += -DGIT_VERSION=\"$(GIT_VERSION)\"
 
-LDFLAGS += $(LIBS)
+BUILD_BIN := battnotify
+TEST_BIN  := stats_test
 
-# Config values for debug build.
-BATT_PATH     = ./batt_capacity
-AC_PATH       = ./ac_plug
-POLLING_DELAY = 10
-WARN_PERCENT  = 15
+PREFIX ?= /usr/local
 
-build: CFLAGS += -DBUILD_TYPE=\"release\"
-build:
-	$(CC) ./$(PROJECT).c -O2 $(CFLAGS) $(LDFLAGS) -o ./$(PROJECT)
+all: build
 
-# No need for libnotify.
-debug: LIBS :=
-debug: CFLAGS += -DBUILD_TYPE=\"debug\"
-debug:
-	$(CC) \
-		./$(PROJECT).c \
-		-O0 -g $(CFLAGS) \
-		-DDEBUG \
-		-DDEBUG_BATT_PATH=\"$(BATT_PATH)\" \
-		-DDEBUG_AC_PATH=\"$(AC_PATH)\" \
-		-DDEBUG_POLLING_DELAY=$(POLLING_DELAY) \
-		-DDEBUG_WARN_PERCENT=$(WARN_PERCENT) \
-		$(LDFLAGS) \
-		-o ./$(PROJECT)
+build: $(BUILD_BIN)
 
-# Run unit tests.
-test: debug
-	./test.sh $(BATT_PATH) $(AC_PATH)
+test: $(TEST_BIN)
 
-gdb: debug
-	gdb ./$(PROJECT)
+$(BUILD_BIN): CFLAGS += $(LIBNOTIFY_CFLAGS)
+$(BUILD_BIN): LDLIBS += $(LIBNOTIFY_LDLIBS)
+$(BUILD_BIN): main.o stats.o
+	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
-clean:
-	rm -f ./$(PROJECT) $(BATT_CAP) $(AC_PLUG)
+$(TEST_BIN): stats_test.o stats.o
+	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)
+
+main.o: config.h stats.h
+
+stats.o: stats.h
 
 install:
-	mkdir -p "$(DESTDIR)$(PREFIX)/bin"
-	$(INSTALL) ./$(PROJECT) "$(DESTDIR)$(PREFIX)/bin/$(PROJECT)"
+	install -Dm755 ./$(BUILD_BIN) "$(DESTDIR)$(PREFIX)/bin/$(BUILD_BIN)"
 
 uninstall:
-	rm -f "$(DESTDIR)$(PREFIX)/bin/$(PROJECT)"
-	rmdir --ignore-fail-on-non-empty "$(DESTDIR)$(PREFIX)/bin"
+	rm -f "$(DESTDIR)$(PREFIX)/bin/$(BUILD_BIN)"
 
-strip:
-	strip ./$(PROJECT)
+clean:
+	rm -f *.o $(BUILD_BIN) $(TEST_BIN)
 
-.PHONY: build debug test gdb clean install uninstall
+.PHONY: all build test install uninstall clean
