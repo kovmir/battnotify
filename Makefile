@@ -14,7 +14,7 @@ CFLAGS += -D_DEFAULT_SOURCE
 CFLAGS += -DGIT_VERSION=\"$(GIT_VERSION)\"
 
 BUILD_BIN := battnotify
-TEST_BIN  := stats_test
+TEST_BIN  := battery_test
 
 PREFIX ?= /usr/local
 
@@ -26,15 +26,15 @@ test: $(TEST_BIN)
 
 $(BUILD_BIN): CFLAGS += $(LIBNOTIFY_CFLAGS)
 $(BUILD_BIN): LDLIBS += $(LIBNOTIFY_LDLIBS)
-$(BUILD_BIN): main.o stats.o
+$(BUILD_BIN): main.o battery.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
-$(TEST_BIN): stats_test.o stats.o
+$(TEST_BIN): battery_test.o battery.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
-main.o: config.h stats.h
+main.o: config.h battery.h
 
-stats.o: stats.h
+battery.o: battery.h
 
 install:
 	install -Dm755 ./$(BUILD_BIN) "$(DESTDIR)$(PREFIX)/bin/$(BUILD_BIN)"

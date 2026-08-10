@@ -8,7 +8,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#include "stats.h"
+#include "battery.h"
 
 int fd_read_number(int *out_buf, int fd);
 

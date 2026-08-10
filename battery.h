@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: MIT
  * Copyright (c) 2026 Ivan Kovmir */
-#ifndef STATS_H
-#define STATS_H
+#ifndef BATTERY_H
+#define BATTERY_H
 
 #include <stdio.h>
 #include <time.h>
@@ -27,4 +27,4 @@ int get_battery(BatteryInfo *bi, int cap_fd, int ac_fd);
 /* Get occupied RAM percentage. */
 int get_memory(int *out_buf, FILE *meminfo);
 
-#endif /* STATS_H */
+#endif /* BATTERY_H */

@@ -7,7 +7,7 @@
 
 #include <libnotify/notify.h>
 
-#include "stats.h"
+#include "battery.h"
 
 #ifndef __linux__
 #error "Unsupported operating system."

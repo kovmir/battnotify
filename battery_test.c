@@ -9,7 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "stats.h"
+#include "battery.h"
 
 #define MKSTEMP_TEMPLATE "/tmp/mindwmstat_XXXXXX"
 
