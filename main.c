@@ -24,7 +24,7 @@
 int
 main(int argc, char *argv[])
 {
-	char msg[MESSAGE_LEN]; /* String to be sent to notification. */
+	char msg[MESSAGE_LEN]; /* Notification message. */
 	int notified = 0;
 	NotifyNotification *ntfn;
 	BatteryInfo bi;
@@ -60,18 +60,21 @@ main(int argc, char *argv[])
 		}
 
 		/* Not charging... */
+
 		if (bi.capacity > batt_warn_percent)
 			continue; /* Enough battery capacity. */
 
 		/* Low battery capacity... */
+
 		if (notified == 1)
 			continue; /* Notification has already been sent. */
 
+		/* Send notification. */
 		snprintf(msg, MESSAGE_LEN, "%d%%", bi.capacity);
 		notify_notification_update(ntfn, ntfn_title, msg, NULL);
 		notify_notification_show(ntfn, NULL);
-
 		notified = 1;
+
 		lseek(cap_fd, 0, SEEK_SET);
 		lseek(ac_fd, 0, SEEK_SET);
 	}
