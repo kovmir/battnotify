@@ -27,4 +27,4 @@ jobs:
         run: make test
 
       - name: Run unit tests
-        run: ./stats_test
+        run: ./battery_test
