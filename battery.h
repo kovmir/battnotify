@@ -17,7 +17,8 @@ typedef struct {
 	PowerState power_state;
 } BatteryInfo;
 
-/* Query power state. */
+/* Query power state.
+ * The caller must lseek(2) the file descriptors between successive calls. */
 int get_battery(BatteryInfo *bi, int cap_fd, int ac_fd);
 
 #endif /* BATTERY_H */
