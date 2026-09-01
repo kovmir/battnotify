@@ -12,7 +12,7 @@ daemon and its configuration.*
 # INSTALL
 
 ```bash
-git clone https://git.sr.ht/~kovmir/battnotify
+git clone https://github.com/kovmir/battnotify.git
 cd battnotify
 make # Optionally adjust config.h to your liking.
 sudo make install
