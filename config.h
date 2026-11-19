@@ -7,7 +7,7 @@ static const char *ac_path = "/sys/class/power_supply/AC/online";
 
 /* Battery/AC polling rate in seconds. */
 static const int polling_delay = 10;
-/* Send a notification when battery level is below this. */
+/* Send a notification when battery level is below or equal to this. */
 static const int batt_warn_percent = 15;
 
 static const char *ntfn_app_name = "battnotify";
