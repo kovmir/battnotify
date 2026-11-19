@@ -14,13 +14,25 @@ int
 read_int(int *out_buf, int fd)
 {
 	char *endp;
-	ssize_t n_read;
+	size_t n_read;
 	char buf[32];
 	long int value;
+	ssize_t r;
 
-	/* Read the file. */
-	n_read = read(fd, buf, sizeof(buf)-1);
-	if (n_read <= 0)
+	/* Read the file. Loop to handle short reads and EINTR. */
+	n_read = 0;
+	while (n_read < sizeof(buf)-1) {
+		r = read(fd, buf + n_read, sizeof(buf)-1 - n_read);
+		if (r == -1) {
+			if (errno == EINTR)
+				continue; /* Interrupted: retry. */
+			return -1;
+		}
+		if (r == 0)
+			break; /* EOF. */
+		n_read += (size_t)r;
+	}
+	if (n_read == 0)
 		return -1;
 	buf[n_read] = '\0';
 
