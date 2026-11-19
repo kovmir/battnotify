@@ -11,7 +11,7 @@
 
 #include "battery.h"
 
-#define MKSTEMP_TEMPLATE "/tmp/mindwmstat_XXXXXX"
+#define MKSTEMP_TEMPLATE "/tmp/battnotify_XXXXXX"
 
 static void test_get_battery(void);
 
