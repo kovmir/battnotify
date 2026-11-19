@@ -51,6 +51,8 @@ main(int argc, char *argv[])
 
 	assert(polling_delay > 0);
 	for (;; sleep(polling_delay)) {
+		lseek(cap_fd, 0, SEEK_SET);
+		lseek(ac_fd, 0, SEEK_SET);
 		if (get_battery(&bi, cap_fd, ac_fd) == -1)
 			errx(1, "unable to get battery info");
 
@@ -74,9 +76,6 @@ main(int argc, char *argv[])
 		notify_notification_update(ntfn, ntfn_title, msg, NULL);
 		notify_notification_show(ntfn, NULL);
 		notified = 1;
-
-		lseek(cap_fd, 0, SEEK_SET);
-		lseek(ac_fd, 0, SEEK_SET);
 	}
 	return 0;
 }
