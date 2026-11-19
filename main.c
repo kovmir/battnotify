@@ -21,14 +21,42 @@
 
 #include "config.h"
 
+static NotifyNotification *init_notification(void);
+static int send_notification(NotifyNotification *n, int capacity);
+
+static NotifyNotification *
+init_notification(void)
+{
+	NotifyNotification *n;
+	if (notify_init(ntfn_app_name) != TRUE)
+		return NULL;
+	n = notify_notification_new(NULL, NULL, NULL);
+	if (n == NULL)
+		return NULL;
+	notify_notification_set_urgency(n, ntfn_urgency_level);
+	notify_notification_set_timeout(n, ntfn_timeout);
+	return n;
+}
+
+static int
+send_notification(NotifyNotification *n, int capacity)
+{
+	char msg[MESSAGE_LEN]; /* Notification message. */
+	snprintf(msg, MESSAGE_LEN, "%d%%", capacity);
+	if (notify_notification_update(n, ntfn_title, msg, NULL) != TRUE)
+		return -1;
+	if (notify_notification_show(n, NULL) != TRUE)
+		return -1;
+	return 0;
+}
+
 int
 main(int argc, char *argv[])
 {
-	char msg[MESSAGE_LEN]; /* Notification message. */
 	int notified = 0;
-	NotifyNotification *ntfn;
 	BatteryInfo bi;
 	int cap_fd, ac_fd;
+	NotifyNotification *ntfn;
 
 	(void)argv; /* Suppress -Wunused-parameter. */
 	if (argc > 1) {
@@ -44,10 +72,9 @@ main(int argc, char *argv[])
 	if (ac_fd == -1)
 		err(1, "AC plug not found %s", ac_path);
 
-	notify_init(ntfn_app_name);
-	ntfn = notify_notification_new(NULL, NULL, NULL);
-	notify_notification_set_urgency(ntfn, ntfn_urgency_level);
-	notify_notification_set_timeout(ntfn, ntfn_timeout);
+	ntfn = init_notification();
+	if (ntfn == NULL)
+		errx(1, "unable to initialize libnotify");
 
 	assert(polling_delay > 0);
 	for (;; sleep(polling_delay)) {
@@ -74,9 +101,10 @@ main(int argc, char *argv[])
 			continue; /* Notification has already been sent. */
 
 		/* Send notification. */
-		snprintf(msg, MESSAGE_LEN, "%d%%", bi.capacity);
-		notify_notification_update(ntfn, ntfn_title, msg, NULL);
-		notify_notification_show(ntfn, NULL);
+		if (send_notification(ntfn, bi.capacity) == -1) {
+			warnx("unable to send notification");
+			continue;
+		}
 		notified = 1;
 	}
 	return 0;
