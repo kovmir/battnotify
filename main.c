@@ -1,3 +1,5 @@
+/* SPDX-License-Identifier: MIT
+ * Copyright (c) 2026 Ivan Kovmir */
 #include <assert.h>
 #include <err.h>
 #include <fcntl.h>
