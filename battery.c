@@ -19,6 +19,9 @@ read_int(int *out_buf, int fd)
 	long int value;
 	ssize_t r;
 
+	assert(out_buf != NULL);
+	assert(fd > 0);
+
 	/* Read the file. Loop to handle short reads and EINTR. */
 	n_read = 0;
 	while (n_read < sizeof(buf)-1) {
@@ -66,6 +69,8 @@ get_battery(BatteryInfo *bi, int cap_fd, int ac_fd)
 	int tmp;
 
 	assert(bi != NULL);
+	assert(cap_fd > 0);
+	assert(ac_fd > 0);
 
 	if (read_int(&tmp, cap_fd) != 0)
 		return -1;
