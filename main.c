@@ -57,6 +57,7 @@ main(int argc, char *argv[])
 {
 	int notified = 0;
 	BatteryInfo bi;
+	Battery batt;
 	int cap_fd, ac_fd;
 	NotifyNotification *ntfn;
 
@@ -73,6 +74,8 @@ main(int argc, char *argv[])
 	ac_fd = open(ac_path, O_RDONLY);
 	if (ac_fd == -1)
 		err(1, "AC plug not found %s", ac_path);
+	batt.cap_fd = cap_fd;
+	batt.ac_fd  = ac_fd;
 
 	ntfn = init_notification();
 	if (ntfn == NULL)
@@ -80,7 +83,7 @@ main(int argc, char *argv[])
 
 	assert(polling_delay > 0);
 	for (;; sleep(polling_delay)) {
-		if (get_battery(&bi, cap_fd, ac_fd) == -1) {
+		if (get_battery(batt, &bi) == -1) {
 			warnx("unable to get battery info");
 			continue;
 		}

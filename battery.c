@@ -64,21 +64,20 @@ read_int(int *out_buf, int fd)
 }
 
 int
-get_battery(BatteryInfo *bi, int cap_fd, int ac_fd)
+get_battery(Battery *batt, BatteryInfo *bi)
 {
 	int tmp;
 
+	assert(batt != NULL);
 	assert(bi != NULL);
-	assert(cap_fd > 0);
-	assert(ac_fd > 0);
 
-	if (lseek(cap_fd, 0, SEEK_SET) ||
-	    lseek(ac_fd, 0, SEEK_SET))
+	if (lseek(batt->cap_fd, 0, SEEK_SET) ||
+	    lseek(batt->ac_fd, 0, SEEK_SET))
 		return -1;
-	if (read_int(&tmp, cap_fd) != 0)
+	if (read_int(&tmp, batt->cap_fd) != 0)
 		return -1;
 	bi->capacity = tmp;
-	if (read_int(&tmp, ac_fd) != 0)
+	if (read_int(&tmp, batt->ac_fd) != 0)
 		return -1;
 	bi->power_state = (tmp == 1) ? POWER_AC : POWER_BATTERY;
 	return 0;

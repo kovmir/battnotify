@@ -17,7 +17,13 @@ typedef struct {
 	PowerState power_state;
 } BatteryInfo;
 
+/* Battery handle. */
+typedef struct {
+	int cap_fd;
+	int ac_fd;
+} Battery;
+
 /* Query power state. */
-int get_battery(BatteryInfo *bi, int cap_fd, int ac_fd);
+int get_battery(Battery batt, BatteryInfo *bi);
 
 #endif /* BATTERY_H */
