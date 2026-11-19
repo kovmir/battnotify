@@ -80,8 +80,6 @@ main(int argc, char *argv[])
 
 	assert(polling_delay > 0);
 	for (;; sleep(polling_delay)) {
-		lseek(cap_fd, 0, SEEK_SET);
-		lseek(ac_fd, 0, SEEK_SET);
 		if (get_battery(&bi, cap_fd, ac_fd) == -1) {
 			warnx("unable to get battery info");
 			continue;

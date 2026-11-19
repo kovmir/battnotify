@@ -72,6 +72,9 @@ get_battery(BatteryInfo *bi, int cap_fd, int ac_fd)
 	assert(cap_fd > 0);
 	assert(ac_fd > 0);
 
+	if (lseek(cap_fd, 0, SEEK_SET) ||
+	    lseek(ac_fd, 0, SEEK_SET))
+		return -1;
 	if (read_int(&tmp, cap_fd) != 0)
 		return -1;
 	bi->capacity = tmp;

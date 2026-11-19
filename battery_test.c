@@ -30,9 +30,11 @@ test_get_battery(void)
 	/* Write test content. */
 	assert(write(cap_fd, cap_content, strlen(cap_content)) != -1);
 	assert(write(ac_fd, ac_content, strlen(ac_content)) != -1);
-	lseek(cap_fd, 0, SEEK_SET);
-	lseek(ac_fd, 0, SEEK_SET);
 	/* Read battery status. */
+	assert(get_battery(&bi, cap_fd, ac_fd) == 0);
+	assert(bi.capacity == 42);
+	assert(bi.power_state == POWER_AC);
+	/* Read again... */
 	assert(get_battery(&bi, cap_fd, ac_fd) == 0);
 	assert(bi.capacity == 42);
 	assert(bi.power_state == POWER_AC);
