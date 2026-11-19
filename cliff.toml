@@ -1,0 +1,42 @@
+# git-cliff ~ configuration file
+# https://git-cliff.org/docs/configuration
+#
+# Generates release notes from conventional commits.
+# Used by .github/workflows/release.yml and by hand:
+#   git cliff --current --strip header
+
+[changelog]
+# The release body starts with the commit list, no preamble.
+header = ""
+# Tera template rendering each release as a flat list of commit hashes.
+body = """
+## Changelog
+{% for commit in commits %}\
+* {{ commit.id }}: {{ commit.raw_message | split(pat="\n") | first }}
+{% endfor %}\
+"""
+# Remove leading and trailing whitespace from the rendered body.
+trim = true
+
+[git]
+# Parse commits according to https://www.conventionalcommits.org
+conventional_commits = true
+# Exclude commits that do not follow conventional commits.
+filter_unconventional = true
+# An array of regex based parsers for extracting data from the commit message.
+# Only used for exclusion here: docs, test and chore commits are dropped,
+# everything else passes through ungrouped.
+commit_parsers = [
+    { message = "^docs", skip = true },
+    { message = "^test", skip = true },
+    { message = "^chore", skip = true },
+    { message = ".*" },
+]
+# Exclude commits that are not matched by any commit parser.
+filter_commits = true
+# Fail on a commit that is not matched by any commit parser.
+fail_on_unmatched_commit = false
+# Only vX.Y.Z tags produce release sections.
+tag_pattern = "v[0-9].*"
+# Order of commits in each group/release within the changelog.
+sort_commits = "oldest"
