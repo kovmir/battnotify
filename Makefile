@@ -2,7 +2,7 @@ CC ?= cc
 
 LIBNOTIFY_CFLAGS := $(shell pkg-config --cflags libnotify)
 LIBNOTIFY_LDLIBS := $(shell pkg-config --libs libnotify)
-GIT_VERSION := $(shell git describe --tags --always --dirty)
+GIT_VERSION := $(shell git describe --tags --always --dirty 2>/dev/null)
 
 CFLAGS += -std=c99
 CFLAGS += -g
@@ -11,7 +11,10 @@ CFLAGS += -pedantic
 CFLAGS += -Wall
 CFLAGS += -Wextra
 CFLAGS += -D_DEFAULT_SOURCE
-CFLAGS += -DGIT_VERSION=\"$(GIT_VERSION)\"
+
+ifneq ($(GIT_VERSION),)
+CFLAGS += -DGIT_VERSION='"$(GIT_VERSION)"'
+endif
 
 BUILD_BIN := battnotify
 TEST_BIN  := battery_test

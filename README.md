@@ -28,7 +28,6 @@ battnotify # Put 'battnotify &' in your '~/.xinitrc'.
 
 # DEPENDENCIES
 
-* [Git][9]
 * [GNU Make][5]
 * [pkg-config][4]
 * [GCC][6] or [Clang][7]
@@ -57,4 +56,3 @@ When submitting PRs, please maintain the [coding style][2] used for the project.
 [6]: https://gcc.gnu.org/
 [7]: https://clang.llvm.org/
 [8]: https://specifications.freedesktop.org/notification-spec/latest/
-[9]: https://git-scm.com/
