@@ -14,7 +14,7 @@ int
 read_int(int *out_buf, int fd)
 {
 	char *endp;
-	size_t n_read;
+	ssize_t n_read;
 	char buf[32];
 	long int value;
 
