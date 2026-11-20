@@ -29,13 +29,15 @@ test: $(TEST_BIN)
 
 $(BUILD_BIN): CFLAGS += $(LIBNOTIFY_CFLAGS)
 $(BUILD_BIN): LDLIBS += $(LIBNOTIFY_LDLIBS)
-$(BUILD_BIN): main.o battery.o
+$(BUILD_BIN): main.o notify.o battery.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
 $(TEST_BIN): battery_test.o battery.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
-main.o: config.h battery.h
+main.o: config.h notify.h battery.h
+
+notify.o: notify.h
 
 battery.o: battery.h
 
