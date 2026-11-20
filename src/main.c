@@ -38,7 +38,7 @@ main(int argc, char *argv[])
 		return 0;
 	}
 
-	if (open_battery(batt_path, ac_path, &batt, &failed_path) == -1)
+	if (battery_open(batt_path, ac_path, &batt, &failed_path) == -1)
 		err(1, "unable to open %s", failed_path);
 
 	ntfn = notify_open(ntfn_app_name, ntfn_urgency_level, ntfn_timeout);
@@ -47,7 +47,7 @@ main(int argc, char *argv[])
 
 	assert(polling_delay > 0);
 	for (;; sleep(polling_delay)) {
-		if (query_battery(batt, &bi) == -1) {
+		if (battery_query(batt, &bi) == -1) {
 			warnx("unable to query battery info");
 			continue;
 		}

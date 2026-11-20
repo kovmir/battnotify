@@ -65,7 +65,7 @@ read_int(int *out_buf, int fd)
 }
 
 int
-open_battery(const char *batt_path, const char *ac_path,
+battery_open(const char *batt_path, const char *ac_path,
              Battery *batt, const char **failed_path)
 {
 	int tmp;
@@ -95,7 +95,7 @@ open_battery(const char *batt_path, const char *ac_path,
 }
 
 int
-query_battery(Battery batt, BatteryInfo *bi)
+battery_query(Battery batt, BatteryInfo *bi)
 {
 	int tmp;
 
@@ -115,7 +115,7 @@ query_battery(Battery batt, BatteryInfo *bi)
 }
 
 void
-close_battery(Battery *batt)
+battery_close(Battery *batt)
 {
 	assert(batt != NULL);
 	if (batt->cap_fd != -1) {
