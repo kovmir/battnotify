@@ -88,6 +88,7 @@ battery_open(const char *batt_path, const char *ac_path,
 		if (failed_path != NULL)
 			*failed_path = ac_path;
 		close(batt->cap_fd);
+		batt->cap_fd = -1;
 		return -1;
 	}
 	batt->ac_fd = tmp;
