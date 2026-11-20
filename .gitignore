@@ -1,3 +1,2 @@
-battnotify
-battery_test
-*.o
+build/
+compile_commands.json

@@ -16,8 +16,20 @@ ifneq ($(GIT_VERSION),)
 CFLAGS += -DGIT_VERSION='"$(GIT_VERSION)"'
 endif
 
-BUILD_BIN := battnotify
-TEST_BIN  := battery_test
+BUILD_DIR := build
+BIN_DIR   := $(BUILD_DIR)/bin
+SRC_DIR   := src
+TEST_DIR  := test
+
+BUILD_BIN := $(BIN_DIR)/battnotify
+TEST_BIN  := $(BIN_DIR)/battery_test
+
+LIB_SRCS := $(SRC_DIR)/notify.c $(SRC_DIR)/battery.c
+LIB_OBJS := $(LIB_SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
+MAIN_OBJ := $(BUILD_DIR)/main.o
+TEST_OBJ := $(BUILD_DIR)/battery_test.o
+
+DEPS := $(MAIN_OBJ:.o=.d) $(LIB_OBJS:.o=.d) $(TEST_OBJ:.o=.d)
 
 PREFIX ?= /usr/local
 
@@ -26,28 +38,36 @@ all: build
 build: $(BUILD_BIN)
 
 test: $(TEST_BIN)
+	./$(TEST_BIN)
 
 $(BUILD_BIN): CFLAGS += $(LIBNOTIFY_CFLAGS)
 $(BUILD_BIN): LDLIBS += $(LIBNOTIFY_LDLIBS)
-$(BUILD_BIN): main.o notify.o battery.o
+$(BUILD_BIN): $(MAIN_OBJ) $(LIB_OBJS)
+	@mkdir -p $(dir $@)
 	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
-$(TEST_BIN): battery_test.o battery.o
+$(TEST_BIN): CPPFLAGS += -I$(SRC_DIR)
+$(TEST_BIN): $(TEST_OBJ) $(BUILD_DIR)/battery.o
+	@mkdir -p $(dir $@)
 	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
-main.o: config.h notify.h battery.h
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -c -o $@ $<
 
-notify.o: notify.h
-
-battery.o: battery.h
+$(BUILD_DIR)/%.o: $(TEST_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -c -o $@ $<
 
 install:
-	install -Dm755 ./$(BUILD_BIN) "$(DESTDIR)$(PREFIX)/bin/$(BUILD_BIN)"
+	install -Dm755 $(BUILD_BIN) "$(DESTDIR)$(PREFIX)/bin/$(notdir $(BUILD_BIN))"
 
 uninstall:
 	rm -f "$(DESTDIR)$(PREFIX)/bin/$(BUILD_BIN)"
 
 clean:
-	rm -f *.o $(BUILD_BIN) $(TEST_BIN)
+	rm -rf $(BUILD_DIR)
+
+-include $(DEPS)
 
 .PHONY: all build test install uninstall clean
