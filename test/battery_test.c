@@ -15,12 +15,12 @@
 
 #define MKSTEMP_TEMPLATE "/tmp/battnotify_XXXXXX"
 
-static void test_close_battery(void);
-static void test_open_battery(void);
-static void test_query_battery(void);
+static void test_battery_close(void);
+static void test_battery_open(void);
+static void test_battery_query(void);
 
 void
-test_close_battery(void)
+test_battery_close(void)
 {
 	Battery batt;
 	int cap_fd = open("/dev/null", O_RDONLY);
@@ -67,7 +67,7 @@ test_close_battery(void)
 }
 
 void
-test_open_battery(void)
+test_battery_open(void)
 {
 	Battery batt;
 	const char *bad_ac = "/nonexistent/online";
@@ -108,7 +108,7 @@ test_open_battery(void)
 }
 
 void
-test_query_battery(void)
+test_battery_query(void)
 {
 	Battery batt;
 	BatteryInfo bi;
@@ -143,8 +143,8 @@ test_query_battery(void)
 int
 main(void)
 {
-	test_open_battery();
-	test_query_battery();
-	test_close_battery();
+	test_battery_open();
+	test_battery_query();
+	test_battery_close();
 	return 0;
 }
