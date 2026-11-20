@@ -18,6 +18,7 @@ static void test_get_battery(void);
 void
 test_get_battery(void)
 {
+	Battery batt;
 	BatteryInfo bi;
 	char cap_content[] = "42";
 	char ac_content[] = "1";
@@ -27,15 +28,17 @@ test_get_battery(void)
 	int ac_fd = mkstemp(ac_tmpl);
 	assert(cap_fd != -1);
 	assert(ac_fd != -1);
+	batt.cap_fd = cap_fd;
+	batt.ac_fd = ac_fd;
 	/* Write test content. */
 	assert(write(cap_fd, cap_content, strlen(cap_content)) != -1);
 	assert(write(ac_fd, ac_content, strlen(ac_content)) != -1);
 	/* Read battery status. */
-	assert(get_battery(&bi, cap_fd, ac_fd) == 0);
+	assert(get_battery(batt, &bi) == 0);
 	assert(bi.capacity == 42);
 	assert(bi.power_state == POWER_AC);
 	/* Read again... */
-	assert(get_battery(&bi, cap_fd, ac_fd) == 0);
+	assert(get_battery(batt, &bi) == 0);
 	assert(bi.capacity == 42);
 	assert(bi.power_state == POWER_AC);
 	/* Clean up. */
