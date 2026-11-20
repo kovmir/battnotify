@@ -2,10 +2,10 @@
  * Copyright (c) 2026 Ivan Kovmir */
 #include <assert.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <fcntl.h>
 
 #include "battery.h"
 
