@@ -23,7 +23,12 @@ typedef struct {
 	int ac_fd;
 } Battery;
 
+/* Open (file descriptors) battery, must be called prior to query_battery(). */
+int open_battery(const char *batt_path, const char *ac_path,
+                 Battery *batt, const char **failed_path);
 /* Query power state. */
-int get_battery(Battery batt, BatteryInfo *bi);
+int query_battery(Battery batt, BatteryInfo *bi);
+/* Close (release file descriptors) battery when no longer needed. */
+void close_battery(Battery *batt);
 
 #endif /* BATTERY_H */

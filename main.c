@@ -58,8 +58,8 @@ main(int argc, char *argv[])
 	int notified = 0;
 	BatteryInfo bi;
 	Battery batt;
-	int cap_fd, ac_fd;
 	NotifyNotification *ntfn;
+	const char *failed_path = NULL;
 
 	(void)argv; /* Suppress -Wunused-parameter. */
 	if (argc > 1) {
@@ -68,14 +68,8 @@ main(int argc, char *argv[])
 		return 0;
 	}
 
-	cap_fd = open(batt_path, O_RDONLY);
-	if (cap_fd == -1)
-		err(1, "battery not found %s", batt_path);
-	ac_fd = open(ac_path, O_RDONLY);
-	if (ac_fd == -1)
-		err(1, "AC plug not found %s", ac_path);
-	batt.cap_fd = cap_fd;
-	batt.ac_fd  = ac_fd;
+	if (open_battery(batt_path, ac_path, &batt, &failed_path) == -1)
+		err(1, "unable to open %s", failed_path);
 
 	ntfn = init_notification();
 	if (ntfn == NULL)
@@ -83,22 +77,18 @@ main(int argc, char *argv[])
 
 	assert(polling_delay > 0);
 	for (;; sleep(polling_delay)) {
-		if (get_battery(batt, &bi) == -1) {
-			warnx("unable to get battery info");
+		if (query_battery(batt, &bi) == -1) {
+			warnx("unable to query battery info");
 			continue;
 		}
-
 		if (bi.power_state == POWER_AC) {
 			notified = 0;
-			continue; /* Charging. */
+			continue;
 		}
-
-		/* Not charging... */
-
 		if (bi.capacity > batt_warn_percent)
-			continue; /* Enough battery capacity. */
+			continue;
 
-		/* Low battery capacity... */
+		/* Not charging and low battery capacity... */
 
 		if (notified == 1)
 			continue; /* Notification has already been sent. */
